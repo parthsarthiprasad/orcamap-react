@@ -12,12 +12,14 @@ import hydropin from './hydropin.png'
 // for different data sources.
 
 import { Icon, Style } from 'ol/style'
+
+const IconStyle = new Icon({
+  src: hydropin,
+})
+
 const styleOptions = {
   MultiPointIcon: new Style({
-    image: new Icon({
-      src: hydropin,
-      scale: [0.25, 0.25],
-    }),
+    image: IconStyle,
   }),
 }
 
@@ -57,7 +59,10 @@ const VectorLayer: React.FC<props> = ({ coordinates, zIndex = 0 }: props) => {
           },
         ),
       }),
-      style: styleOptions.MultiPointIcon,
+      style: (feature, resolution) => {
+        IconStyle.setScale(1 / Math.pow(resolution, 1 / 4))
+        return styleOptions.MultiPointIcon
+      },
     })
 
     map.addLayer(vectorLayer)
